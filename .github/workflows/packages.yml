@@ -33,5 +33,5 @@ jobs:
           targets: all
           push: true
           set: |
-            VERSION=${{ env.VERSION }}
-            REGISTRY=ghcr.io
+            live-cmaf-transcoder.VERSION=${{ env.VERSION }}
+            live-cmaf-transcoder.REGISTRY=ghcr.io 
