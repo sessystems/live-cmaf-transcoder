@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  packages: write
+
 jobs:
   buildx:
     name: Build and push Packages
