@@ -65,7 +65,7 @@ struct Args {
     #[arg(long, default_value = "ffmpeg")]
     ffmpeg: String,
 
-    /// Path to FFMPEG binary
+    /// Use standard ffmpeg without patches
     #[arg(long, default_value = "false")]
     standard_ffmpeg: bool,
 
@@ -81,8 +81,8 @@ struct Args {
     #[arg(long)]
     name: Option<String>,
 
-    /// Public base URL of this server
-    #[arg(long, default_value = "http://localhost:8888")]
+    /// Public base URL of this server, ex: http://localhost:8888
+    #[arg(long)]
     base_url: Option<String>,
 
     /// Redis URI redis(s)://username:password@host:port
