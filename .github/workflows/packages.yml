@@ -15,7 +15,7 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Set REGISTRY
-        run: echo "REGISTRY=ghcr.io 
+        run: echo "REGISTRY=ghcr.io" >> $GITHUB_ENV
         
       -
         name: Checkout
