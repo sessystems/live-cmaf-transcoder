@@ -33,4 +33,4 @@ jobs:
           targets: all
           push: true
           set: |
-            live-cmaf-transcoder.VERSION=${{ env.VERSION }}
+            VERSION=${{ env.VERSION }}
