@@ -1,0 +1,42 @@
+services:
+  live-cmaf-transcoder:
+    image: codelabregistry.azurecr.io/live-cmaf-transcoder:latest
+    volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+    ports:
+      - "8888:8888"
+    devices:
+      - "/dev/dri:/dev/dri"
+    depends_on:
+      - live-cmaf-transcoder-redis
+    network_mode: "host"
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu,video,compute,utility]
+  live-cmaf-transcoder-redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - db:/data
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81} --notify-keyspace-events KEA
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db:
+  data:
+  ramdisk:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs      

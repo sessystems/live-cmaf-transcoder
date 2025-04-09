@@ -1,0 +1,17 @@
+frontend/node_modules
+frontend/.nuxt
+frontend/.output
+frontend/dist
+cmaf-encoder/target
+cmaf-dvb-i/target
+target
+*.mkv
+*.mp4
+pipelines
+doc
+Dockerfile*
+*.o
+*.d
+*.a
+*.version
+*.pc

@@ -1,0 +1,91 @@
+From 9559f46bf1be09deef1401a42dda383bdd13f464 Mon Sep 17 00:00:00 2001
+From: Xavier Scholtes <xavier.scholtes@ses.com>
+Date: Thu, 12 Dec 2024 16:25:12 +0100
+Subject: [PATCH] Improve ffmpeg stat for live by calculating fps average over
+ a time window
+
+---
+ fftools/ffmpeg.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/fftools/ffmpeg.c b/fftools/ffmpeg.c
+index 4a0c7d5c4d..8fc491d97c 100644
+--- a/fftools/ffmpeg.c
++++ b/fftools/ffmpeg.c
+@@ -543,14 +543,18 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
+     int vid;
+     double bitrate;
+     double speed;
++    double avg_speed = 0.0;
+     static int64_t last_time = -1;
+     static int first_report = 1;
++    static uint64_t last_frame_number = 0;
++    static int64_t last_pts = 0;
+     uint64_t nb_frames_dup = 0, nb_frames_drop = 0;
+     int mins, secs, us;
+     int64_t hours;
+     const char *hours_sign;
+     int ret;
+     float t;
++    float t_since_last = 0;
+ 
+     if (!print_stats && !is_last_report && !progress_avio)
+         return;
+@@ -562,6 +566,7 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
+         if (((cur_time - last_time) < stats_period && !first_report) ||
+             (first_report && atomic_load(&nb_output_dumped) < nb_output_files))
+             return;
++        t_since_last = (cur_time - last_time) / 1000000.0;
+         last_time = cur_time;
+     }
+ 
+@@ -580,13 +585,18 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
+         }
+         if (!vid && ost->type == AVMEDIA_TYPE_VIDEO && ost->filter) {
+             float fps;
++            float avg_fps;
+             uint64_t frame_number = atomic_load(&ost->packets_written);
+ 
++
+             fps = t > 1 ? frame_number / t : 0;
++            avg_fps = t_since_last > 0 ? (frame_number - last_frame_number) / t_since_last : 0;
++            last_frame_number = frame_number;
+             av_bprintf(&buf, "frame=%5"PRId64" fps=%3.*f q=%3.1f ",
+                      frame_number, fps < 9.95, fps, q);
+             av_bprintf(&buf_script, "frame=%"PRId64"\n", frame_number);
+             av_bprintf(&buf_script, "fps=%.2f\n", fps);
++            av_bprintf(&buf_script, "avg_fps=%.2f\n", avg_fps);
+             av_bprintf(&buf_script, "stream_%d_%d_q=%.1f\n",
+                        ost->file->index, ost->index, q);
+             if (is_last_report)
+@@ -614,6 +624,12 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
+ 
+     bitrate = pts != AV_NOPTS_VALUE && pts && total_size >= 0 ? total_size * 8 / (pts / 1000.0) : -1;
+     speed   = pts != AV_NOPTS_VALUE && t != 0.0 ? (double)pts / AV_TIME_BASE / t : -1;
++    if (pts != AV_NOPTS_VALUE && last_pts != AV_NOPTS_VALUE && last_pts < pts && t_since_last > 0) {
++        avg_speed = (double)(pts - last_pts) / AV_TIME_BASE / t_since_last;
++    } else {
++        avg_speed = -1;
++    }
++    last_pts = pts;
+ 
+     if (total_size < 0) av_bprintf(&buf, "size=N/A time=");
+     else                av_bprintf(&buf, "size=%8.0fKiB time=", total_size / 1024.0);
+@@ -658,6 +674,14 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
+         av_bprintf(&buf_script, "speed=%4.3gx\n", speed);
+     }
+ 
++        if (speed < 0) {
++        av_bprintf(&buf, " avg_speed=N/A");
++        av_bprintf(&buf_script, "avg_speed=N/A\n");
++    } else {
++        av_bprintf(&buf, " avg_speed=%4.3gx", avg_speed);
++        av_bprintf(&buf_script, "avg_speed=%4.3gx\n", avg_speed);
++    }
++
+     if (print_stats || is_last_report) {
+         const char end = is_last_report ? '\n' : '\r';
+         if (print_stats==1 && AV_LOG_INFO > av_log_get_level()) {
+-- 
+2.39.2
+

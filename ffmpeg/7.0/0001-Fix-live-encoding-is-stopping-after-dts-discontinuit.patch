@@ -1,0 +1,134 @@
+From 0e9af5704dd9834ce2fc46bda4ad47afe3c3b89a Mon Sep 17 00:00:00 2001
+From: Xavier Scholtes <xavier.scholtes@ses.com>
+Date: Thu, 12 Dec 2024 16:28:12 +0100
+Subject: [PATCH] Fix, live encoding is stopping after dts discontinuity
+
+---
+ fftools/ffmpeg_demux.c      | 2 +-
+ fftools/ffmpeg_mux.c        | 8 ++++++++
+ fftools/ffmpeg_mux.h        | 1 +
+ libavcodec/vaapi_encode.c   | 8 ++++++++
+ libavcodec/vaapi_encode.h   | 1 +
+ libavfilter/vaapi_vpp.c     | 3 ++-
+ libavfilter/vf_hwdownload.c | 2 ++
+ libavformat/rtsp.c          | 2 +-
+ 8 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/fftools/ffmpeg_demux.c b/fftools/ffmpeg_demux.c
+index 47312c9fe1..8aef849543 100644
+--- a/fftools/ffmpeg_demux.c
++++ b/fftools/ffmpeg_demux.c
+@@ -257,7 +257,7 @@ static void ts_discontinuity_detect(Demuxer *d, InputStream *ist,
+         int64_t delta = pkt_dts - d->last_ts;
+         if (FFABS(delta) > 1LL * dts_delta_threshold * AV_TIME_BASE) {
+             d->ts_offset_discont -= delta;
+-            av_log(NULL, AV_LOG_DEBUG,
++            av_log(NULL, AV_LOG_WARNING,
+                    "Inter stream timestamp discontinuity %"PRId64", new offset= %"PRId64"\n",
+                    delta, d->ts_offset_discont);
+             pkt->dts -= av_rescale_q(delta, AV_TIME_BASE_Q, pkt->time_base);
+diff --git a/fftools/ffmpeg_mux.c b/fftools/ffmpeg_mux.c
+index e8e5c677b8..c05dc5f5ed 100644
+--- a/fftools/ffmpeg_mux.c
++++ b/fftools/ffmpeg_mux.c
+@@ -144,6 +144,14 @@ static int mux_fixup_ts(Muxer *mux, MuxStream *ms, AVPacket *pkt)
+         pkt->pts = pkt->dts = AV_NOPTS_VALUE;
+ #endif
+ 
++    if (pkt->dts != AV_NOPTS_VALUE) {
++        if (pkt->dts <= ms->last_dts) {
++            av_log(ost, AV_LOG_WARNING, "Invalid PKT DTS: %"PRId64" LAST-DTS: %"PRId64"\n",
++            pkt->dts, ms->last_dts);
++        }
++        ms->last_dts = pkt->dts;
++    }
++
+     // rescale timestamps to the stream timebase
+     if (ost->type == AVMEDIA_TYPE_AUDIO && !ost->enc) {
+         // use av_rescale_delta() for streamcopying audio, to preserve
+diff --git a/fftools/ffmpeg_mux.h b/fftools/ffmpeg_mux.h
+index 16af6d38ba..14007a30a6 100644
+--- a/fftools/ffmpeg_mux.h
++++ b/fftools/ffmpeg_mux.h
+@@ -62,6 +62,7 @@ typedef struct MuxStream {
+     /* dts of the last packet sent to the muxer, in the stream timebase
+      * used for making up missing dts values */
+     int64_t         last_mux_dts;
++    int64_t         last_dts;
+ 
+     int64_t         stream_duration;
+     AVRational      stream_duration_tb;
+diff --git a/libavcodec/vaapi_encode.c b/libavcodec/vaapi_encode.c
+index b8765a19c7..43428658c3 100644
+--- a/libavcodec/vaapi_encode.c
++++ b/libavcodec/vaapi_encode.c
+@@ -701,6 +701,14 @@ static int vaapi_encode_set_output_property(AVCodecContext *avctx,
+                                 (3 * ctx->output_delay + ctx->async_depth)];
+     }
+ 
++    if (pkt->dts <= ctx->last_dts) {
++        av_log(avctx, AV_LOG_ERROR, "Wrong VAAPI DTS ?: "
++            "dts:%"PRId64" last_dts:%"PRId64"\n", pkt->dts, ctx->last_dts);
++    }    
++
++    ctx->last_dts = pkt->dts;
++
++
+     return 0;
+ }
+ 
+diff --git a/libavcodec/vaapi_encode.h b/libavcodec/vaapi_encode.h
+index 0eed9691ca..717eb77990 100644
+--- a/libavcodec/vaapi_encode.h
++++ b/libavcodec/vaapi_encode.h
+@@ -395,6 +395,7 @@ typedef struct VAAPIEncodeContext {
+ 
+     /** Tail data of a pic, now only used for av1 repeat frame header. */
+     AVPacket        *tail_pkt;
++    int64_t         last_dts;
+ } VAAPIEncodeContext;
+ 
+ enum {
+diff --git a/libavfilter/vaapi_vpp.c b/libavfilter/vaapi_vpp.c
+index 59961bfa4a..abb87c6e72 100644
+--- a/libavfilter/vaapi_vpp.c
++++ b/libavfilter/vaapi_vpp.c
+@@ -205,7 +205,8 @@ int ff_vaapi_vpp_config_output(AVFilterLink *outlink)
+ 
+     output_frames->initial_pool_size = 4;
+ 
+-    err = ff_filter_init_hw_frames(avctx, outlink, 10);
++    /*@ypo Increase pool of hw frame from 10 to 20*/
++    err = ff_filter_init_hw_frames(avctx, outlink, 20);
+     if (err < 0)
+         goto fail;
+ 
+diff --git a/libavfilter/vf_hwdownload.c b/libavfilter/vf_hwdownload.c
+index 5ef23cb5d4..2447843b19 100644
+--- a/libavfilter/vf_hwdownload.c
++++ b/libavfilter/vf_hwdownload.c
+@@ -138,6 +138,8 @@ static int hwdownload_filter_frame(AVFilterLink *link, AVFrame *input)
+     err = av_hwframe_transfer_data(output, input, 0);
+     if (err < 0) {
+         av_log(ctx, AV_LOG_ERROR, "Failed to download frame: %d.\n", err);
++        /*@ypo do not conside it has an error to avoid stopping the transcode*/
++        err = 0;
+         goto fail;
+     }
+ 
+diff --git a/libavformat/rtsp.c b/libavformat/rtsp.c
+index caf7fcd2d2..73734c46d6 100644
+--- a/libavformat/rtsp.c
++++ b/libavformat/rtsp.c
+@@ -2653,7 +2653,7 @@ static const AVClass rtp_demuxer_class = {
+ const FFInputFormat ff_rtp_demuxer = {
+     .p.name         = "rtp",
+     .p.long_name    = NULL_IF_CONFIG_SMALL("RTP input"),
+-    .p.flags        = AVFMT_NOFILE,
++    .p.flags        = AVFMT_NOFILE | AVFMT_TS_DISCONT,
+     .p.priv_class   = &rtp_demuxer_class,
+     .priv_data_size = sizeof(RTSPState),
+     .read_probe     = rtp_probe,
+-- 
+2.39.2
+

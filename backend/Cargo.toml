@@ -1,0 +1,58 @@
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[package]
+# edition — The Rust edition.
+edition = "2021"
+
+# name — The name of the package.
+name = "live-cmaf-transcoder"
+# version — The version of the package.
+version = "0.1.35"
+# authors — The authors of the package.
+authors = ["Yannick Poirier <yannick.poirier@ses.com>","Xavier Scholtes <xavier.scholtes@ses.com>"]
+# rust-version — The minimal supported Rust version.
+rust-version = "1.70.0"
+# description — A description of the package.
+description = "CMAF Streamer transcode live streams into the Common Media Application Format (CMAF)."
+# documentation — URL of the package documentation.
+documentation = "https://github.com/sessystemsemgineering/live-cmaf-transcoder/doc"
+# readme — Path to the package’s README file.
+readme = "../README.md"
+# homepage — URL of the package homepage.
+homepage = "https://github.com/sessystemsemgineering/live-cmaf-transcoder"
+# repository — URL of the package source repository.
+repository = "https://github.com/sessystemsemgineering/live-cmaf-transcoder"
+# license — The package license.
+license = "Apache 2.0"
+# keywords — Keywords for the package.
+keywords = ["encoding","CMAF","DASH","HLS","VAAPI","GPU","NVIDIA"]
+# categories — Categories of the package.
+categories = ["multimedia::encoding","multimedia::video","hardware-support"]
+
+[dependencies]
+actix-web = "4"
+actix-cors = "0.7"
+actix-files = "0.6"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tokio = { version = "1", features = [ "signal", "rt-multi-thread", "macros", "process", "fs" ] }
+clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.16", features = [ "v4" ]}
+url = "2.5"
+chrono = "0.4"
+local-ip-address = "0.6"
+machine-uid = "0.5"
+hostname = "0.4"
+async-trait = "0.1"
+sysinfo = "0.34"
+redis = { version = "0.29", features = [ "aio", "tokio-comp", "json", "connection-manager" ] }
+nix = { version = "0.29", features = ["signal"] }
+utoipa-swagger-ui = { version = "9.0", features = ["actix-web", "vendored"] }
+utoipa = { version = "5.3", features = ["actix_extras", "chrono"] }
+utoipa-actix-web = "0.1"
+mime_guess = "2.0.5"
+rust-embed = "8.6"
+
+[build-dependencies]
+num_cpus = "1.16"

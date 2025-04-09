@@ -1,0 +1,16 @@
+/target
+/backend/bindings/
+/backend/target
+/*.mkv
+/*.bin
+*.o
+*.d
+*.a
+*.version
+*.pc
+.vscode
+backend/frontend/_nuxt
+backend/frontend/200.html
+backend/frontend/404.html
+backend/frontend/favicon.ico
+backend/frontend/index.html

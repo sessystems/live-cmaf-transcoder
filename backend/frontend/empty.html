@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <title>CMAF-STREAMER</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin-top: 10%;
+            font-size: 1.5em;
+        }
+        p.shell {
+            text-align: left;
+            font-size: 1.25em;
+            font-family: monospace;
+            white-space: normal;
+            overflow: hidden;
+            display: block;
+        }
+        p.shell .prompt {
+            font-weight: bold; 
+        }
+        .terminal {
+            background-color: #000;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: inline-block;
+            min-width: 80%;
+        }
+    </style>
+    <body>
+        <h1>EMPTY FRONTEND</h1>
+        <p>Frontend distribution is emty</p>
+        <p>Open terminal and type the following instructions to add the frontend to your distribution.</p>
+        <div class="terminal">
+            <p class="shell"><span class="prompt">live-cmaf-transcoder$</span> cd frontend</p>
+            <p class="shell"><span class="prompt">frontend$</span> npm i</p>
+            <p class="shell"><span class="prompt">frontend$</span> npx nuxi generate</p>
+            <p class="shell"><span class="prompt">frontend$</span> mv dist/* ../backend/frontend/</p>
+        </div>
+    </body>
+</html>

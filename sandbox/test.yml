@@ -1,0 +1,18 @@
+services:
+  live-cmaf-transcoder:
+    image: codelabregistry.azurecr.io/live-cmaf-transcoder-demo:latest
+    restart: always
+    volumes:
+      - /etc/machine-id:/etc/machine-id
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
+    devices:
+      - "/dev/dri:/dev/dri"
+    ports:
+      - '8888:8888'
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu,video,compute,utility]

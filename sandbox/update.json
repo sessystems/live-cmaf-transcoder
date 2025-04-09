@@ -1,0 +1,59 @@
+{
+    "config": {
+        "acceleration": "Software",
+        "ast_delay_ms": 200,
+        "audio_adaptation_set": {
+            "bitrate": 128000,
+            "encoder": "FDKAac",
+            "profile": "Low",
+            "role": "Main",
+            "sample_rate": 48000
+        },
+        "colorspace": "BT709",
+        "deinterlace": {
+            "enable": false
+        },
+        "enable_hls": true,
+        "gpu_uid": "sw",
+        "init_seg_name": "init_$RepresentationID$.$ext$",
+        "input": {
+            "connect_timeout_ms": 5000,
+            "mode": "Caller",
+            "uri": "udp://127.0.0.1:3000"
+        },
+        "media_seg_name": "$RepresentationID$-$Number%05d$.$ext$",
+        "mpd_type": "Template",
+        "name": "toto",
+        "output": "/live/toto",
+        "segment_duration_ms": 2000,
+        "server_uid": "3476900567878811119",
+        "state": "Inactive",
+        "uid": "3b1f0ea3-8a79-46b1-88c0-f12c0fa7ef74",
+        "utc_timing_url": "http://time.akamai.com?iso&amp;ms",
+        "video_adaptation_set": [
+            {
+                "encoder": "H264",
+                "framerate_den": 1,
+                "framerate_num": 50,
+                "representations": [
+                    {
+                        "bitrate": 8000000,
+                        "height": 720,
+                        "max_bitrate": 8000000,
+                        "preset": "Medium",
+                        "profile": "Main",
+                        "text": {
+                            "color": "white",
+                            "enabled": false,
+                            "fontsize": 80,
+                            "position": "TopCenter",
+                            "text": "My Text"
+                        },
+                        "width": 1280
+                    }
+                ]
+            }
+        ],
+        "window_size": 10
+    }
+}

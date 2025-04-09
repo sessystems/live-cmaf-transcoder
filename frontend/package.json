@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "generate:api": "openapi-generator-cli generate",
+    "generate:icon": "icon-gen -i assets/icons/ses.svg -o public --ico --ico-name favicon",
+    "generate:dist": "nuxi generate"
+  },
+  "dependencies": {
+    "@nuxt/icon": "^1.10.1",
+    "jb-videojs-hls-quality-selector": "^2.0.2",
+    "nuxt": "^3.14.1592",
+    "video.js": "^8.21.0",
+    "videojs-contrib-quality-levels": "^4.1.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.5.0",
+    "vuetify-nuxt-module": "^0.18.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.14.0",
+    "@nuxt/eslint-config": "^0.7.3",
+    "@openapitools/openapi-generator-cli": "^2.15.3",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "icon-gen": "^5.0.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.6.2",
+    "vue-tsc": "^2.0.29"
+  }
+}
