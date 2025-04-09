@@ -10,7 +10,7 @@ The distributed nature of the system allows for encoding tasks to be run on diff
 
 This project is built atop a customized version of ffmpeg
 
-![Overview](https://raw.githubusercontent.com/sessystems/live-cmaf-transcoder/main/docs/images/config_input_stream.png)
+![Overview](https://raw.githubusercontent.com/sessystems/live-cmaf-transcoder/main/docs/images/overview.png)
 
 ## Features
 
