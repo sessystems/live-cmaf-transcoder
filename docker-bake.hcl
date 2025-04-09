@@ -131,8 +131,8 @@ target "live-cmaf-transcoder" {
         nvidia-runtime = "docker-image://${item.nvidia-runtime}"
     }
     tags = [
-        "live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
-        equal("latest","${item.tag}") ? "live-cmaf-transcoder:${item.tag}": "",
+        "sessystems/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
+        equal("latest","${item.tag}") ? "sessystems/live-cmaf-transcoder:${item.tag}": "",
     ] 
     matrix = {
         item = [
@@ -162,8 +162,8 @@ target "live-cmaf-transcoder-demo" {
         live-cmaf-transcoder = "target:live-cmaf-transcoder-nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}"
     }
     tags = [
-        "live-cmaf-transcoder-demo:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
-        equal("latest","${item.tag}") ? "live-cmaf-transcoder-demo:${item.tag}": "",
+        "sessystems/live-cmaf-transcoder-demo:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
+        equal("latest","${item.tag}") ? "sessystems/live-cmaf-transcoder-demo:${item.tag}": "",
     ] 
     matrix = {
         item = [
