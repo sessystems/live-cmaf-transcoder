@@ -14,6 +14,9 @@ jobs:
       - name: Extract version from tag
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
+      - name: Set REGISTRY
+        run: echo "REGISTRY=ghcr.io 
+        
       -
         name: Checkout
         uses: actions/checkout@v4  
@@ -32,6 +35,4 @@ jobs:
           files: docker-bake.hcl
           targets: all
           push: true
-          set: |
-            live-cmaf-transcoder.VERSION=1.0
-            live-cmaf-transcoder.REGISTRY=ghcr.io 
+

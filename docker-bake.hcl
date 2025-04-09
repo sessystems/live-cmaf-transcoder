@@ -51,7 +51,6 @@ group "default" {
 group "all" {
     targets = [
         "live-cmaf-transcoder",
-        #"live-cmaf-transcoder-demo",
     ]
 }
 
@@ -144,9 +143,9 @@ target "live-cmaf-transcoder" {
         nvidia-runtime = "docker-image://${item.nvidia-runtime}"
     }
     tags = [
-        "${REGISTRY}:${ORGREPOS}/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
-        equal("latest","${item.tag}") ? "${REGISTRY}:${ORGREPOS}/live-cmaf-transcoder:${item.tag}": "",
-        equal("latest","${item.tag}") ? "${REGISTRY}:${ORGREPOS}/live-cmaf-transcoder:${VERSION}": "",
+        "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
+        equal("latest","${item.tag}") ? "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:${item.tag}": "",
+        equal("latest","${item.tag}") ? "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:${VERSION}": "",
     ] 
     matrix = {
         item = [

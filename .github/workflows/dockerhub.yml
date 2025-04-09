@@ -32,5 +32,3 @@ jobs:
           files: docker-bake.hcl
           targets: all
           push: true
-          set: |
-            live-cmaf-transcoder.VERSION=${{ env.VERSION }}
