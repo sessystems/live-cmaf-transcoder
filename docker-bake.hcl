@@ -28,17 +28,30 @@ target "_common_labels" {
     }
 }
 
+variable "REGISTRY" {
+  default = "docker.io"
+}
+
+variable "ORGREPOS" {
+  default = "sessystems"
+}
+
+variable "VERSION" {
+  description = "The version tag for the Docker image"
+  default = "" # Default is empty, we will set it in the workflow
+}
+
 group "default" {
     targets = [
         "live-cmaf-transcoder-nv-11-1-ffmpeg-7-0",
-        "live-cmaf-transcoder-demo-nv-11-1-ffmpeg-7-0",
+        #"live-cmaf-transcoder-demo-nv-11-1-ffmpeg-7-0",
     ]
 }
 
 group "all" {
     targets = [
         "live-cmaf-transcoder",
-        "live-cmaf-transcoder-demo",
+        #"live-cmaf-transcoder-demo",
     ]
 }
 
@@ -131,8 +144,9 @@ target "live-cmaf-transcoder" {
         nvidia-runtime = "docker-image://${item.nvidia-runtime}"
     }
     tags = [
-        "sessystems/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
-        equal("latest","${item.tag}") ? "sessystems/live-cmaf-transcoder:${item.tag}": "",
+        "${REGISTRY}:${ORGREPOS}/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
+        equal("latest","${item.tag}") ? "${REGISTRY}:${ORGREPOS}/live-cmaf-transcoder:${item.tag}": "",
+        equal("latest","${item.tag}") ? "${REGISTRY}:${ORGREPOS}/live-cmaf-transcoder:${VERSION}": "",
     ] 
     matrix = {
         item = [
@@ -153,32 +167,32 @@ target "live-cmaf-transcoder" {
     
 }
 
-target "live-cmaf-transcoder-demo" {
-    inherits = ["_common_labels"]
-    dockerfile="live-cmaf-transcoder-demo.Dockerfile"
-    name="live-cmaf-transcoder-demo-nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}"
-    context = "./docker"
-    contexts = {
-        live-cmaf-transcoder = "target:live-cmaf-transcoder-nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}"
-    }
-    tags = [
-        "sessystems/live-cmaf-transcoder-demo:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
-        equal("latest","${item.tag}") ? "sessystems/live-cmaf-transcoder-demo:${item.tag}": "",
-    ] 
-    matrix = {
-        item = [
-            {
-                nv-tag="12-0"
-                ffmpeg-tag="7-0"
-                tag = "latest"
-            },
-            {
-                nv-tag="11-1"
-                ffmpeg-tag="7-0"
-                tag = ""
-            }
-        ]
-    }
-    
-}
+#target "live-cmaf-transcoder-demo" {
+#    inherits = ["_common_labels"]
+#    dockerfile="live-cmaf-transcoder-demo.Dockerfile"
+#    name="live-cmaf-transcoder-demo-nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}"
+#    context = "./docker"
+#    contexts = {
+#        live-cmaf-transcoder = "target:live-cmaf-transcoder-nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}"
+#    }
+#    tags = [
+#        "sessystems/live-cmaf-transcoder-demo:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
+#        equal("latest","${item.tag}") ? "sessystems/live-cmaf-transcoder-demo:${item.tag}": "",
+#    ] 
+#    matrix = {
+#        item = [
+#            {
+#                nv-tag="12-0"
+#                ffmpeg-tag="7-0"
+#                tag = "latest"
+#            },
+#            {
+#                nv-tag="11-1"
+#                ffmpeg-tag="7-0"
+#                tag = ""
+#            }
+#        ]
+#    }
+#    
+#}
 

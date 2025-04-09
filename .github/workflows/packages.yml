@@ -11,19 +11,19 @@ jobs:
     name: Build and push to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: Extract version from tag
+      - name: Extract version from tag
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       -
         name: Checkout
         uses: actions/checkout@v4  
 
-      - name: Log in to Docker Hub
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}  
 
       -
         name: Build and Push
@@ -34,3 +34,4 @@ jobs:
           push: true
           set: |
             live-cmaf-transcoder.VERSION=${{ env.VERSION }}
+            live-cmaf-transcoder.REGISTRY=ghcr.io
