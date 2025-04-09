@@ -1,4 +1,4 @@
-# CMAF Streamer
+# Live CMAF Transcoder
 
 Distributed system designed to re-encode live streams into the Common Media Application Format (CMAF). 
 
