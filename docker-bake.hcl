@@ -144,7 +144,7 @@ target "live-cmaf-transcoder" {
     }
     tags = [
         "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}",
-        "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}-${VERSION}",
+        "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:nv-${item.nv-tag}-ffmpeg-${item.ffmpeg-tag}-v${VERSION}",
         equal("latest","${item.tag}") ? "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:${item.tag}": "",
         equal("latest","${item.tag}") ? "${REGISTRY}/${ORGREPOS}/live-cmaf-transcoder:${VERSION}": "",
     ] 
