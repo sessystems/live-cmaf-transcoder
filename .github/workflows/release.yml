@@ -49,35 +49,13 @@ jobs:
       - name: Save Docker Image to tar file
         run: docker save ${DOCKER_IMAGE} | gzip > ${IMAGE_FILENAME}
 
-  #    - name: Create GitHub Release
-  #      id: create_release
-  #      uses: actions/create-release@v1
-  #      env:
-  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #      with:
-  #        tag_name: ${{ env.REF }}
-  #        release_name: v${{ env.VERSION }}
-  #        draft: false
-  #        prerelease: false
-      - name: Gets latest created Release
-        id: latest_release_info
-        uses: jossef/action-latest-release-info@v1.2.2
+      - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload v${{ env.VERSION }} ${{ env.IMAGE_FILENAME }}
 
-      - name: Upload Docker image to Release
-        uses: actions/upload-release-asset@v1
+      - name: Publish release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.latest_release_info.outputs.upload_url }}
-          asset_path: ./${{ env.IMAGE_FILENAME }}
-          asset_name: ${{ env.IMAGE_FILENAME }}
-          asset_content_type: application/gzip
+        run: gh release edit v${{ env.VERSION }} --draft=false
 
-      - name: Publish Release
-        uses: eregon/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ steps.latest_release_info.outputs.id }}
