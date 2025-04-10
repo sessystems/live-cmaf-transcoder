@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref (e.g. refs/tags/v1.0.0)"
+        required: true
 
 permissions:
   packages: write
