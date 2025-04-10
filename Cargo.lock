@@ -1122,7 +1122,7 @@ checksum = "23fb14cb19457329c82206317a5663005a4d404783dc74f4252769b0d5f42856"
 
 [[package]]
 name = "live-cmaf-transcoder"
-version = "0.1.40"
+version = "0.1.41"
 dependencies = [
  "actix-cors",
  "actix-files",
