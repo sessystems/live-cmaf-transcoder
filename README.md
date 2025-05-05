@@ -49,7 +49,6 @@ The script will:
 - Start the transcoder container  
 
 be sure that the following tools are available on your machine to properly detect the hardware capability:
-- **vainfo:** Tools to check VAAPI support  
 - **nvidia-smi:** Tools to check NVEnc support 
 
 This is the easiest way to get up and running with minimal setup.
@@ -95,17 +94,17 @@ To run the live-cmaf-transcoder without GPU acceleration, use the following comm
 docker compose up
 ```
 
-#### 5. Run **With Intel GPU Support**
+#### 5. Run **With Direct Rendering Manager (DRM) GPU Support**
 
-To use Intel hardware acceleration, use the command below:
+To use DRM hardware acceleration, use the command below:
 
 ```sh
-docker compose --profile=intel up
+docker compose --profile=drm up
 ```
 
-#### 6. Run **With NVidia + Intel GPU Support**
+#### 6. Run **With NVidia + DRM GPU Support**
 
-For both NVIDIA and Intel GPU support.
+For both NVIDIA and DRM GPU support.
 
 Ensure the NVIDIA Container Toolkit is installed on your host machine, then run:
 

@@ -8,12 +8,12 @@
 #    Suitable for environments without GPU support.
 #    $ docker compose up
 #
-# 2. **Run with Intel GPU support**:
-#    Enables hardware acceleration using Intel iGPU via VAAPI.
+# 2. **Run with DRM GPU support**:
+#    Enables hardware acceleration using Intel GPU via VAAPI.
 #    Requires access to /dev/dri on the host.
-#    $ docker compose --profile intel up 
+#    $ docker compose --profile drm up 
 #
-# 3. **Run with Intel + NVIDIA GPU support**:
+# 3. **Run with DRM + NVIDIA GPU support**:
 #    Enables hardware acceleration using both Intel and NVIDIA GPUs.
 #    NVIDIA container toolkit must be installed on the host.
 #    $ docker compose --profile gpu up 
@@ -50,12 +50,12 @@ services:
       - 'cpu'
       - 'all'
 
-  live-cmaf-transcoder-intel-gpu:
+  live-cmaf-transcoder-drm-gpu:
     <<: *live-cmaf-transcoder
     devices:
       - "/dev/dri:/dev/dri"
     profiles:
-      - 'intel'
+      - 'drm'
       - 'all'
 
   live-cmaf-transcoder-gpu:
