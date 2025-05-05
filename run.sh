@@ -90,7 +90,7 @@ has_docker || {
 info "Checking GPU support..."
 profile="cpu"
 if has_drm; then
-    profile="intel"
+    profile="drm"
 fi
 if has_nvidia; then
     profile="gpu"
