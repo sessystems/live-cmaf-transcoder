@@ -16,7 +16,7 @@
         <v-col>
           <v-text-field
             v-model="config.input.uri"
-            label="URL (srt|udp|http://<ip>:<port>)"
+            label="URL (srt|udp|rtp|http://<ip>:<port>)"
             variant="underlined"
             density="compact"
           />
