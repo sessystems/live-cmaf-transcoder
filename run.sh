@@ -121,5 +121,5 @@ echo -e "${BLUE}╔════════════════════�
 echo -e "                           ${GREEN}\033[1m🎉 All done!\033[0m${NC}"
 echo -e "  🌐  Web Application:    ${GREEN}${BASE_URL}${NC}"
 echo -e "  🧹  To stop containers: ${YELLOW}docker compose --profile=all down${NC}"
-echo -e "  🚀  To start again:     ${YELLOW}docker compose --profile=${profile} up -d${NC}"
+echo -e "  🚀  To start again:     ${YELLOW}BASE_URL=\"${BASE_URL}\" docker compose --profile=${profile} up -d${NC}"
 echo -e "${BLUE}╚═════════════════════════════════════════════════════════════╝${NC}"
