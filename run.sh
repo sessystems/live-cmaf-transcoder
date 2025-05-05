@@ -12,20 +12,14 @@ success() { local indent="${2:-}"; echo -e "${indent}${GREEN}✔${NC} $1"; }
 warn()    { local indent="${2:-}"; echo -e "${indent}${YELLOW}⚠️ ${NC} $1"; }
 error()   { local indent="${2:-}"; echo -e "${indent}${RED}❌${NC} $1"; }
 
-has_intel() {
-
+has_drm() {
     local indent=" "
-    if ! command -v vainfo &> /dev/null; then
-        error "Missing 'vainfo' tool. Please install it to detect Intel GPUs." "$indent"
-        return 1
-    fi
-
-    va_info=$(vainfo --display drm | grep VAProfileH264Main)
-    if [[ -n "$va_info" ]]; then
-        success "Intel VAAPI GPU detected." "$indent"
+    local render_devices=(/dev/dri/renderD*)
+    if [ ${#render_devices[@]} -gt 0 ]; then
+        success "Found render device(s): ${render_devices[*]}" "$indent"
         return 0
     else
-        warn "No Intel VAAPI GPU detected." "$indent"
+        warn "No /dev/dri/renderD* devices found." "$indent"
         return 1
     fi
 }
@@ -95,7 +89,7 @@ has_docker || {
 
 info "Checking GPU support..."
 profile="cpu"
-if has_intel; then
+if has_drm; then
     profile="intel"
 fi
 if has_nvidia; then
