@@ -49,7 +49,6 @@ The script will:
 - Start the transcoder container  
 
 be sure that the following tools are available on your machine to properly detect the hardware capability:
-- **vainfo:** Tools to check VAAPI support  
 - **nvidia-smi:** Tools to check NVEnc support 
 
 This is the easiest way to get up and running with minimal setup.
