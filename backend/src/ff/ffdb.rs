@@ -58,12 +58,13 @@ impl FFDb {
 
     pub async fn remove_ff_config(&self, server_uid: &str, uid: &str) -> std::io::Result<()> {
         let config_id = Self::config_id(server_uid, uid);
-        self.redis.con.clone().del(&config_id).await.map_err(|e| {
+        let _: () = self.redis.con.clone().del(&config_id).await.map_err(|e| {
             new_io_error!(
                 std::io::ErrorKind::Other,
                 format!("Fail to remove ff config {:?}", e)
             )
-        })
+        })?;
+        self.redis.save().await
     }
 
     pub async fn create_ff_config(
@@ -90,7 +91,8 @@ impl FFDb {
         config: model::ff::ffconfig::FFConfig,
     ) -> std::io::Result<()> {
         let mut con = self.redis.con.clone();
-        Self::set_ff_config(config, &mut con).await
+        Self::set_ff_config(config, &mut con).await?;
+        self.redis.save().await
     }
 
     async fn set_ff_config(
@@ -124,6 +126,7 @@ impl FFDb {
 
         config.state = state;
         Self::set_ff_config(config, &mut self.redis.con.clone()).await?;
+        self.redis.save().await?;
         Ok(true)
     }
 

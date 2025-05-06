@@ -40,9 +40,16 @@ impl DBRedis {
         })
     }
 
+    pub async fn save(&self) -> std::io::Result<()> {
+        let mut con = self.con.clone();
+        let result: redis::RedisResult<()> = redis::cmd("BGSAVE").query_async(&mut con).await;
+        result.map_err(|e| new_io_error!(std::io::ErrorKind::Other, e.to_string()))
+    }
+
     pub async fn set_server(&self, server: server::Server) -> std::io::Result<()> {
         let key: String = format!("server:{}", server.uid);
-        Self::set_object(&key, &server, &mut self.con.clone()).await
+        Self::set_object(&key, &server, &mut self.con.clone()).await?;
+        self.save().await
     }
 
     pub async fn get_server(&self, server_uid: &str) -> std::io::Result<server::Server> {
@@ -102,7 +109,7 @@ impl DBRedis {
 
         let _: Option<()> = con.del(configs).await.ok();
         let _: Option<()> = con.del(&server_key).await.ok();
-        Ok(())
+        self.save().await
     }
 
     pub async fn set_server_status(
@@ -117,12 +124,13 @@ impl DBRedis {
 
     pub async fn remove_server_status(&mut self, server_uid: &str) -> std::io::Result<()> {
         let key = format!("server_status:{}", server_uid);
-        self.con.del(key).await.map_err(|e| {
+        let _: () = self.con.del(key).await.map_err(|e| {
             new_io_error!(
                 std::io::ErrorKind::Other,
                 format!("Fail to remove server status {:?}", e)
             )
-        })
+        })?;
+        self.save().await
     }
 
     pub async fn get_all_server_status(
