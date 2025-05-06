@@ -109,10 +109,21 @@ jobs:
       - name: Save Docker Image to tar file
         run: docker save ${DOCKER_IMAGE} | xz -T0 -c > ${IMAGE_FILENAME}
 
-      - name: Upload Docker image to Assets
+      - name: Generate Release tar.xz 
+        run: |
+          mkdir -p live-cmaf-transcoder-$VERSION
+          cp compose.yaml live-cmaf-transcoder-$VERSION/
+          cp docker/run.sh live-cmaf-transcoder-$VERSION/
+          mv ${IMAGE_FILENAME} live-cmaf-transcoder-$VERSION/
+          sed "s/\$\$CURRENT_VERSION\$\$/$VERSION/" docker/README.template.sh > live-cmaf-transcoder-$VERSION/README
+          tar -cJf live-cmaf-transcoder-$VERSION.tar.xz live-cmaf-transcoder-$VERSION
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload v${{ env.VERSION }} ${{ env.IMAGE_FILENAME }}
+
+      - name: Upload live-cmaf-transcoder-XXX.tar.xz to Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload v${{ env.VERSION }} live-cmaf-transcoder-${{ env.VERSION }}.tar.xz
 
       - name: Upload compose.yaml to Assets
         env:
@@ -122,7 +133,7 @@ jobs:
       - name: Upload run.sh to Assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload v${{ env.VERSION }} run.sh
+        run: gh release upload v${{ env.VERSION }} docker/run.sh
 
       - name: Publish release
         env:
