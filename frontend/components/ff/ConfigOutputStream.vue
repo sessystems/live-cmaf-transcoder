@@ -1,24 +1,14 @@
 <template>
-  <v-card elevation="0">
+  <v-card elevation="0" class="my-2">
     <v-card-title> MPEG-DASH/HLS Output </v-card-title>
     <v-card-text>
       <v-row dense>
-        <v-col cols="6" lg="3">
-          <v-select
-            v-model="config.mpdType"
-            :items="mpdTypeList"
-            label="Type of MPD"
-            variant="underlined"
-            density="compact"
-          />
-        </v-col>
-
         <v-col cols="6" lg="3">
           <v-text-field
             v-model.number="config.segmentDurationMs"
             type="number"
             label="Segment duration"
-            suffix="milliseconds"
+            suffix="ms"
             variant="underlined"
             density="compact"
           />
@@ -42,15 +32,34 @@
           <v-text-field
             v-model.number="config.astDelayMs"
             label="Availability Start Time Offset"
-            suffix="milliseconds"
+            suffix="ms"
             hint="Increase the offset to avoid 404 when requesting the segment too early."
             variant="underlined"
             density="compact"
           />
         </v-col>
+        <v-col cols="6" lg="3">
+          <v-switch
+            class="ml-4"
+            v-model="advanced"
+            label="Advanced Settings"
+            color="info"
+            density="compact"
+          />
+        </v-col>
       </v-row>
 
-      <v-row dense>
+      <v-row dense v-if="advanced">
+        <v-col cols="4" lg="2">
+          <v-select
+            v-model="config.mpdType"
+            :items="mpdTypeList"
+            label="Type of MPD"
+            variant="underlined"
+            density="compact"
+          />
+        </v-col>
+
         <v-col>
           <div class="d-flex align-center">
             <v-text-field
@@ -84,28 +93,27 @@
                       Representation.
                     </v-list-item>
                     <v-list-item>
-                      <b>$Number%0Nd$</b> — Replaced by the Segment Number. The
-                      optional <code>%0Nd</code> specifies the minimum number of
-                      digits, padded with leading zeros.
+                      <b>$Number%0Nd$</b> — Replaced by the Segment Number. The optional
+                      <code>%0Nd</code> specifies the minimum number of digits, padded
+                      with leading zeros.
                     </v-list-item>
 
                     <v-list-item>
-                      <b>$Bandwidth%0Nd$</b> — Replaced by the Representation's
-                      bandwidth. The optional <code>%0Nd</code> specifies the
-                      minimum number of digits, padded with leading zeros.
+                      <b>$Bandwidth%0Nd$</b> — Replaced by the Representation's bandwidth.
+                      The optional <code>%0Nd</code> specifies the minimum number of
+                      digits, padded with leading zeros.
                     </v-list-item>
                     <v-list-item>
-                      <b>$Time%0Nd$</b> — Replaced by the segment start time.
-                      The optional <code>%0Nd</code> specifies the minimum
-                      number of digits, padded with leading zeros.
+                      <b>$Time%0Nd$</b> — Replaced by the segment start time. The optional
+                      <code>%0Nd</code> specifies the minimum number of digits, padded
+                      with leading zeros.
                     </v-list-item>
                     <v-list-item>
                       <b>"$ext$"</b> : Replaced with the file extension, such as
                       <code>.mp4</code>
                     </v-list-item>
                     <v-list-item>
-                      <b>"$$"</b> : Replaced with a literal dollar sign
-                      (<code>$</code>).
+                      <b>"$$"</b> : Replaced with a literal dollar sign (<code>$</code>).
                     </v-list-item>
                   </v-list>
                 </v-card-text>
@@ -147,17 +155,16 @@
                       Representation.
                     </v-list-item>
                     <v-list-item>
-                      <b>$Bandwidth%0Nd$</b> — Replaced by the Representation's
-                      bandwidth. The optional <code>%0Nd</code> specifies the
-                      minimum number of digits, padded with leading zeros.
+                      <b>$Bandwidth%0Nd$</b> — Replaced by the Representation's bandwidth.
+                      The optional <code>%0Nd</code> specifies the minimum number of
+                      digits, padded with leading zeros.
                     </v-list-item>
                     <v-list-item>
                       <b>"$ext$"</b> : Replaced with the file extension, such as
                       <code>.mp4</code>
                     </v-list-item>
                     <v-list-item>
-                      <b>"$$"</b> : Replaced with a literal dollar sign
-                      (<code>$</code>).
+                      <b>"$$"</b> : Replaced with a literal dollar sign (<code>$</code>).
                     </v-list-item>
                   </v-list>
                 </v-card-text>
@@ -179,7 +186,7 @@
         <v-col>
           <v-switch
             v-model="config.enableHls"
-            label="Enable HLS"
+            label="Generate HLS Playlists"
             color="info"
             density="compact"
           />
@@ -220,6 +227,7 @@ import { mergeProps } from "vue";
 const config = defineModel<FFConfig>({ required: true });
 const utils = useUtils();
 const servers = useServers();
+const advanced = ref(false);
 
 const mpdTypeList = ["Template", "SegmentTimeline"];
 

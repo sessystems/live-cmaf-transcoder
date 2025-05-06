@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="0">
+  <v-card elevation="0" class="my-2">
     <v-card-title> Input Stream </v-card-title>
 
     <v-card-text>
@@ -59,9 +59,7 @@
           <v-select
             v-model="gpu"
             :items="gpuList"
-            :rules="[
-              () => gpu != undefined || 'Please select the acceleration',
-            ]"
+            :rules="[() => gpu != undefined || 'Please select the acceleration']"
             label="Acceleration"
             variant="underlined"
             density="compact"

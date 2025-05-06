@@ -1,6 +1,7 @@
 <template>
   <v-card
     elevation="0"
+    class="my-2"
   >
     <v-card-title>
       <v-tooltip
