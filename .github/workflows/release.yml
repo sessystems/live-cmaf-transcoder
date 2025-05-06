@@ -115,7 +115,7 @@ jobs:
           cp compose.yaml live-cmaf-transcoder-$VERSION/
           cp docker/run.sh live-cmaf-transcoder-$VERSION/
           mv ${IMAGE_FILENAME} live-cmaf-transcoder-$VERSION/
-          sed "s/\$\$CURRENT_VERSION\$\$/$VERSION/" docker/README.template.sh > live-cmaf-transcoder-$VERSION/README
+          sed "s/\$\$CURRENT_VERSION\$\$/$VERSION/" docker/README.template > live-cmaf-transcoder-$VERSION/README
           tar -cJf live-cmaf-transcoder-$VERSION.tar.xz live-cmaf-transcoder-$VERSION
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
