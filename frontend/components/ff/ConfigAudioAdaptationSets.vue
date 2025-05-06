@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="0">
+  <v-card elevation="0" class="my-2">
     <v-card-title> Audio Representations </v-card-title>
     <v-card-text>
       <v-row dense>
