@@ -1,0 +1,3 @@
+Run the following command to deploy the server locally
+
+./run.sh --version=$$CURRENT_VERSION$$
