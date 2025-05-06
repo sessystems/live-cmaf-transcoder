@@ -3,6 +3,8 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
+use super::ffconfig::Acceleration;
+
 #[derive(Clone, Deserialize, Serialize, Debug, Copy, PartialEq, ToSchema)]
 pub enum AudioEncoder {
     Aac,
@@ -60,9 +62,13 @@ pub struct AudioAdaptationSet {
 }
 
 impl AudioAdaptationSet {
-    pub fn new() -> Self {
+    pub fn new(acceleration: Acceleration) -> Self {
         Self {
-            encoder: AudioEncoder::FDKAac,
+            encoder: match acceleration {
+                Acceleration::Software => AudioEncoder::Aac,
+                Acceleration::Vaapi => AudioEncoder::FDKAac,
+                Acceleration::Cuda => AudioEncoder::FDKAac,
+            },
             bitrate: 128000,
             sample_rate: 48000,
             role: Role::Main,

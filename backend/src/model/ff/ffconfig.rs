@@ -70,7 +70,7 @@ impl FFConfig {
             colorspace: Colorspace::Auto,
             deinterlace: VideoFilterDeinterlace::new(),
             video_adaptation_set: vec![VideoAdaptationSet::new()],
-            audio_adaptation_set: AudioAdaptationSet::new(),
+            audio_adaptation_set: AudioAdaptationSet::new(gpu.acceleration),
             mpd_type: MPDType::Template,
             enable_hls: true,
             media_seg_name: "$RepresentationID$-$Number%05d$.$ext$".to_string(),
