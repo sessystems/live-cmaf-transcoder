@@ -6,7 +6,7 @@ edition = "2021"
 # name — The name of the package.
 name = "live-cmaf-transcoder"
 # version — The version of the package.
-version = "0.1.60"
+version = "0.1.61"
 # authors — The authors of the package.
 authors = ["Yannick Poirier <yannick.poirier@ses.com>","Xavier Scholtes <xavier.scholtes@ses.com>"]
 # rust-version — The minimal supported Rust version.
