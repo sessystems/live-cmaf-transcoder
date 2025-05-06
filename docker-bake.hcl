@@ -49,7 +49,6 @@ variable "VERSION" {
 group "default" {
     targets = [
         "live-cmaf-transcoder-nv-11-1-ffmpeg-7-0",
-        #"live-cmaf-transcoder-demo-nv-11-1-ffmpeg-7-0",
     ]
 }
 
