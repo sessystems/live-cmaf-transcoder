@@ -13,10 +13,6 @@ else
   sed -i '/^requirepass /d' "$REDIS_CONF"
 fi
 
-if ! grep -qE '^save[[:space:]]+20[[:space:]]+1' "$REDIS_CONF"; then
-  echo "save 20 1" >> "$REDIS_CONF"
-fi
-
 sed -i 's/^loglevel.*/loglevel warning/' "$REDIS_CONF"
 sed -i 's/^notify-keyspace-events.*/notify-keyspace-events KEA/' "$REDIS_CONF"
 sed -i 's/^bind.*/# bind/' "$REDIS_CONF"
