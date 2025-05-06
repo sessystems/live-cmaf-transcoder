@@ -21,7 +21,7 @@
 ##
 
 x-live-cmaf-transcoder: &live-cmaf-transcoder
-  image: ghcr.io/sessystems/live-cmaf-transcoder:latest
+  image: ghcr.io/sessystems/live-cmaf-transcoder:${SERVER_VERSION:-latest}
   volumes:
     - /etc/machine-id:/etc/machine-id
     - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id

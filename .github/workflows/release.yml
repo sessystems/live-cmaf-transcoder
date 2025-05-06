@@ -58,7 +58,7 @@ jobs:
           fi
           git tag -a v${VERSION} -m "Release version $VERSION"
           echo "DOCKER_IMAGE=ghcr.io/sessystems/live-cmaf-transcoder:$VERSION" >> $GITHUB_ENV
-          echo "IMAGE_FILENAME=sessystems-live-cmaf-transcoder-$VERSION.tar.gz" >> $GITHUB_ENV
+          echo "IMAGE_FILENAME=sessystems-live-cmaf-transcoder-$VERSION.tar.xz" >> $GITHUB_ENV
         env:  
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

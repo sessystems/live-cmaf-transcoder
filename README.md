@@ -136,6 +136,7 @@ The following environment variables can be used with Docker Compose to configure
 | `REDIS_PORT`          | Port on which the redis server will be exposed by Docker Compose.<br>If not set, defaults to `6379`. | `REDIS_PORT=6380 docker compose up` |
 | `DISABLE_TRANSCODER`  | Set to `true` to run the server without any transcoder capability. Useful to serve only the management UI. | `DISABLE_TRANSCODER=true docker compose up` |
 | `DISABLE_UI`  | Set to `true` to disable the management UI. Useful for joining a cluster that already includes a UI server. | `DISABLE_UI=true docker compose up` |
+| `SERVER_VERSION`  | Select the version of the server to run. <br>If not set, defaults to `latest` | `SERVER_VERSION=0.1.60 docker compose up` |
 
 ### Setting Up a Cluster of Transcoders
 
