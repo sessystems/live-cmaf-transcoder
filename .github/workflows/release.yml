@@ -93,6 +93,7 @@ jobs:
           files: docker-bake.hcl
           targets: all
           push: true
+          no-cache: true
 
       - name: Check disk space
         run: df . -h
