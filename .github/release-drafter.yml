@@ -34,6 +34,18 @@ template: |
   curl -L https://github.com/sessystems/live-cmaf-transcoder/releases/latest/download/run.sh | bash
   ```
 
+  ## 🛠️ Offline installation (Optional)
+
+  If you need to install and run the server on a machine without internet access, follow these steps:
+
+  Download and extract the release archive to the machine: [live-cmaf-transcoder-$RESOLVED_VERSION.tar.xz](https://github.com/sessystems/live-cmaf-transcoder/releases/download/v$RESOLVED_VERSION/live-cmaf-transcoder-$RESOLVED_VERSION.tar.xz).
+
+  Navigate to the extracted directory and run the following command:
+
+  ```sh
+  ./run.sh --version=$RESOLVED_VERSION
+  ```
+
   For more information, check out the [README](https://github.com/sessystems/live-cmaf-transcoder)
 
   ## Changes
