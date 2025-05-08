@@ -31,7 +31,7 @@ impl Srt {
     pub fn new() -> Self {
         Self {
             uri: String::new(),
-            mode: SRTMode::Caller,
+            mode: SRTMode::Listener,
             connect_timeout_ms: 5000,
         }
     }
