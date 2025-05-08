@@ -59,8 +59,9 @@ macro_rules! new_io_error {
 #[command(author, version, about, long_about = None)]
 struct Args {
     /// Web server binding address
-    #[arg(long, default_value = "0.0.0.0:8888")]
-    bind_addr: String,
+    /// ex: 0.0.0.0:8888
+    #[arg(long)]
+    bind_addr: Option<String>,
 
     /// Path to FFMPEG binary built with GPL codecs
     #[arg(long, default_value = "ffmpeg")]
@@ -124,8 +125,13 @@ async fn main() -> std::io::Result<()> {
         .init();
     let args = Args::parse();
 
-    let port: u16 = args
+    let bind_addr = args
         .bind_addr
+        .clone()
+        .or_else(|| get_env("BIND_ADDR"))
+        .unwrap_or_else(|| "0.0.0.0:8888".to_string());
+
+    let port: u16 = bind_addr
         .split(':')
         .last()
         .unwrap_or("80")
@@ -287,7 +293,7 @@ async fn main() -> std::io::Result<()> {
     )]
     struct ApiDoc;
 
-    tracing::info!("Start Web Server: {}", args.bind_addr);
+    tracing::info!("Start Web Server: {}", bind_addr);
     HttpServer::new(move || {
         let cmaf_service = Files::new("/", live_output_dir.clone())
             .disable_content_disposition()
@@ -332,7 +338,7 @@ async fn main() -> std::io::Result<()> {
 
         app.service(cmaf_service)
     })
-    .bind(&args.bind_addr)
+    .bind(&bind_addr)
     .unwrap()
     .run()
     .await

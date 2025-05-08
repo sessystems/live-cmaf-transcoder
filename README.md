@@ -127,6 +127,7 @@ The following environment variables can be used with Docker Compose to configure
 | Env                    | Description             | Example        |
 |------------------------|-------------------------|----------------|
 | `BASE_URL`             | Public base URL of this server instance.<br>If not set, defaults to `http://localhost`. | `BASE_URL=https://www.live-cmaf-transcoder.com docker compose up`  |
+| `BIND_ADDR`            | Specifies the IP address and port of the network interface where the web server should bind to.<br>If not set, defaults to `0.0.0.0:80`. | `BIND_ADDR=192.168.1.1:8080 docker compose up`  |
 | `SERVER_NAME`  | Human-readable name for this server instance.<br>If not set, defaults to the machine’s hostname. | `SERVER_NAME=my-server-1 docker compose up`                                                 |
 | `SERVER_UID`           | Unique identifier for this server instance.<br>Must be different for each instance sharing the same Redis database.<br>Once set, it should not be changed, doing so may result in loss of the associated configuration.<br>Defaults to the machine's Linux ID. | `SERVER_UID=1234 docker compose up`                                                         |
 | `SERVER_PORT`          | Port on which the web server will be publicly exposed with Docker Compose.<br>If not set, defaults to `80`. | `SERVER_PORT=8080 docker compose up` |
