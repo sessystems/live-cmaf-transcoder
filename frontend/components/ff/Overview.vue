@@ -8,7 +8,7 @@
 
     <v-row>
       <v-col>
-        <p>The Live CMAF Transcoder is designed to transcode live video sources into CMAF formats (MPEG-DASH, HLS) in real-time.</p> 
+        <p>The Live CMAF Transcoder is designed to transcode live video sources into CMAF (MPEG-DASH, HLS) in real-time.</p> 
       </v-col>
     </v-row>
 

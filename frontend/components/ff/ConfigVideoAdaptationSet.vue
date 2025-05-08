@@ -73,7 +73,7 @@ const _props = defineProps<{ title: string, config: FFConfig }>()
 const emit = defineEmits(['remove'])
 
 const videoEncoderList   = [
-{ title: "H264", value: "H264" },
+{ title: "H.264", value: "H264" },
 { title: "HEVC", value: "HEVC" },
 ];
 
