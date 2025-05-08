@@ -32,10 +32,10 @@
 
     <v-card-text>
       <v-row>
-        <v-col lg="1"> VERSION: v{{ server?.version }} </v-col>
-        <v-col lg="1"> CPU: {{ (serverStatus?.cpuUsage ?? 0) / 100 }}% </v-col>
-        <v-col lg="1"> CORES: {{ serverStatus?.nbCpus ?? 0 }} </v-col>
-        <v-col>
+        <v-col lg="1" style="min-width: 160px;">VERSION: v{{ server?.version }} </v-col>
+        <v-col lg="1" style="min-width: 130px;">CPU: {{ (serverStatus?.cpuUsage ?? 0) / 100 }}% </v-col>
+        <v-col lg="1" style="min-width: 110px;"> CORES: {{ serverStatus?.nbCpus ?? 0 }} </v-col>
+        <v-col style="min-width: 120px;">
           RAM: {{ utils.formatBytes(Number(serverStatus?.memoryUsage ?? 0)) }} /
           {{ utils.formatBytes(Number(serverStatus?.totalMemory ?? 0)) }}
         </v-col>
