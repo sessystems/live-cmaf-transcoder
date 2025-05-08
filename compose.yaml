@@ -11,12 +11,12 @@
 # 2. **Run with DRM GPU support**:
 #    Enables hardware acceleration using Intel GPU via VAAPI.
 #    Requires access to /dev/dri on the host.
-#    $ docker compose --profile drm up 
+#    $ docker compose --profile drm up
 #
 # 3. **Run with DRM + NVIDIA GPU support**:
 #    Enables hardware acceleration using both Intel and NVIDIA GPUs.
 #    NVIDIA container toolkit must be installed on the host.
-#    $ docker compose --profile gpu up 
+#    $ docker compose --profile gpu up
 #
 ##
 
@@ -27,11 +27,9 @@ x-live-cmaf-transcoder: &live-cmaf-transcoder
     - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id
     - data:/data
     - ramdisk:/tmp
-  ports:
-    - "${SERVER_PORT-80}:8888"
-    - "${REDIS_PORT-6379}:6379"
   environment:
     - "BASE_URL=${BASE_URL:-http://localhost}"
+    - "BIND_ADDR=${BIND_ADDR:-0.0.0.0:80}"
     - "SERVER_NAME=${SERVER_NAME:-}"
     - "SERVER_UID=${SERVER_UID:-}"
     - "REDIS_URL=${REDIS_URL:-}"
@@ -40,23 +38,23 @@ x-live-cmaf-transcoder: &live-cmaf-transcoder
     - "DISABLE_TRANSCODER=${DISABLE_TRANSCODER:-}"
     - "DISABLE_UI=${DISABLE_UI:-}"
     - "RUST_LOG=warn"
-    
-services:
+  network_mode: host
 
+services:
   live-cmaf-transcoder-no-gpu:
     <<: *live-cmaf-transcoder
     profiles:
-      - ''
-      - 'cpu'
-      - 'all'
+      - ""
+      - "cpu"
+      - "all"
 
   live-cmaf-transcoder-drm-gpu:
     <<: *live-cmaf-transcoder
     devices:
       - "/dev/dri:/dev/dri"
     profiles:
-      - 'drm'
-      - 'all'
+      - "drm"
+      - "all"
 
   live-cmaf-transcoder-gpu:
     <<: *live-cmaf-transcoder
@@ -70,8 +68,8 @@ services:
               count: all
               capabilities: [gpu, video, compute, utility]
     profiles:
-      - 'gpu'
-      - 'all'
+      - "gpu"
+      - "all"
 
 volumes:
   data:
