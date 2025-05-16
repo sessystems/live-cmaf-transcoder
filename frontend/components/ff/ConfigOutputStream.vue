@@ -28,16 +28,17 @@
             density="compact"
           />
         </v-col>
+
         <v-col cols="6" lg="3">
-          <v-text-field
-            v-model.number="config.astDelayMs"
-            label="Availability Start Time Offset"
-            suffix="ms"
-            hint="Increase the offset to avoid 404 when requesting the segment too early."
-            variant="underlined"
+          <v-switch
+            class="ml-4"
+            v-model="config.enableHls"
+            label="Generate HLS Playlists"
+            color="info"
             density="compact"
           />
         </v-col>
+
         <v-col cols="6" lg="3">
           <v-switch
             class="ml-4"
@@ -50,7 +51,7 @@
       </v-row>
 
       <v-row dense v-if="advanced">
-        <v-col cols="4" lg="2">
+        <v-col cols="6" lg="3">
           <v-select
             v-model="config.mpdType"
             :items="mpdTypeList"
@@ -59,7 +60,27 @@
             density="compact"
           />
         </v-col>
+        <v-col cols="6" lg="3">
+          <v-text-field
+            v-model.number="config.astDelayMs"
+            label="Availability Start Time Offset"
+            suffix="ms"
+            hint="Increase the offset to avoid 404 when requesting the segment too early."
+            variant="underlined"
+            density="compact"
+          />
+        </v-col>
+        <v-col>
+          <v-text-field
+            v-model="config.utcTimingUrl"
+            label="UTC Timing URL"
+            variant="underlined"
+            density="compact"
+          />
+        </v-col>
+      </v-row>
 
+      <v-row dense v-if="advanced">
         <v-col>
           <div class="d-flex align-center">
             <v-text-field
@@ -174,24 +195,7 @@
         </v-col>
       </v-row>
 
-      <v-row dense>
-        <v-col>
-          <v-text-field
-            v-model="config.utcTimingUrl"
-            label="UTC Timing URL"
-            variant="underlined"
-            density="compact"
-          />
-        </v-col>
-        <v-col>
-          <v-switch
-            v-model="config.enableHls"
-            label="Generate HLS Playlists"
-            color="info"
-            density="compact"
-          />
-        </v-col>
-      </v-row>
+      <v-row dense> </v-row>
 
       <v-row dense>
         <v-col>
