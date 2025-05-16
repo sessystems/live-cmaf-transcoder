@@ -3,7 +3,7 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-#[derive(Clone, Deserialize, Serialize, Debug, Copy, PartialEq, Eq,ToSchema)]
+#[derive(Clone, Deserialize, Serialize, Debug, Copy, PartialEq, Eq, ToSchema)]
 pub enum SRTMode {
     Caller,
     Listener,
@@ -25,6 +25,7 @@ pub struct Srt {
     pub uri: String,
     pub mode: SRTMode,
     pub connect_timeout_ms: u64,
+    pub srt_latency_us: i32,
 }
 
 impl Srt {
@@ -33,6 +34,7 @@ impl Srt {
             uri: String::new(),
             mode: SRTMode::Listener,
             connect_timeout_ms: 5000,
+            srt_latency_us: 200000,
         }
     }
 }
@@ -46,7 +48,9 @@ impl Display for Srt {
                     .append_pair(
                         "connect_timeout",
                         self.connect_timeout_ms.to_string().as_str(),
-                    );
+                    )
+                    .append_pair("latency", &self.srt_latency_us.to_string().as_str());
+
                 return write!(f, "{}", url.as_str());
             }
         }
