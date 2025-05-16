@@ -44,6 +44,18 @@
             density="compact"
           />
         </v-col>
+        <v-col>
+          <v-text-field
+            v-model.number="srtLatencyMs"
+            type="number"
+            label="Latency (SRT Only)"
+            suffix="milliseconds"
+            :disabled="config.input.uri.startsWith('srt://') === false"
+            variant="underlined"
+            density="compact"
+            hint="receiver delay to absorb bursts of missed packet retransmissions"
+          />
+        </v-col>
       </v-row>
 
       <v-row dense>
@@ -98,5 +110,14 @@ const gpuList = computed(() => {
       value: gpu,
     })) ?? []
   );
+});
+
+const srtLatencyMs = computed({
+  get: () => {
+    return config.value.input.srtLatencyUs / 1000;
+  },
+  set: (value: number) => {
+    config.value.input.srtLatencyUs = value * 1000;
+  },
 });
 </script>
