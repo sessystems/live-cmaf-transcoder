@@ -177,8 +177,8 @@ impl VideoAdaptationSet {
             representations: vec![VideoRepresentation::new()],
             framerate_num: 50,
             framerate_den: 1,
-            aspect_ratio_num: None,
-            aspect_ratio_den: None,
+            aspect_ratio_num: Some(16),
+            aspect_ratio_den: Some(9),
         }
     }
 
