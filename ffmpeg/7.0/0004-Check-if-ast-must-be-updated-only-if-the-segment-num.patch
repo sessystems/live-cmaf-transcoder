@@ -1,0 +1,49 @@
+From c567f0be76f13ae6335b46ab51d92ddc5c813f9f Mon Sep 17 00:00:00 2001
+From: Yannick Poirier <yannick.poirier@ses.com>
+Date: Thu, 24 Jul 2025 14:30:53 +0200
+Subject: [PATCH] Check if ast must be updated only if the segment number is
+ the min
+
+---
+ libavformat/dashenc.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/libavformat/dashenc.c b/libavformat/dashenc.c
+index fbfcf0b573..9366e90495 100644
+--- a/libavformat/dashenc.c
++++ b/libavformat/dashenc.c
+@@ -2066,6 +2066,19 @@ static int dash_parse_prft(DASHContext *c, AVPacket *pkt)
+     return 0;
+ }
+ 
++static int min_segment_index(AVFormatContext *s) {
++    DASHContext *c = s->priv_data;
++    int ret = -1;
++    for (int i = 0; i < s->nb_streams; i++) {
++        OutputStream *os = &c->streams[i];
++        if (os->segment_index > 0) {
++            if (ret < 0 || os->segment_index < ret)
++                ret = os->segment_index;
++        }
++    }
++    return ret;
++}
++
+ static int calc_expected_segment_index(DASHContext *c, AVPacket *pkt) {
+     
+     int64_t now_us = av_gettime();
+@@ -2130,7 +2143,10 @@ static int dash_write_packet(AVFormatContext *s, AVPacket *pkt)
+                     sizeof(c->availability_start_time), start_time_us + c->ast_delay_us);
+     } else {
+ 
+-        if (os->segment_index > 0 && c->use_template && !c->use_timeline) {
++        if (os->segment_index > 0
++                && c->use_template
++                && !c->use_timeline
++                && os->segment_index == min_segment_index(s)) {
+ 
+             int expected_segment_index = calc_expected_segment_index(c, pkt);
+             if (expected_segment_index + 1 > os->segment_index || expected_segment_index < os->segment_index - 2) {
+-- 
+2.49.0
+
